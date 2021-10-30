@@ -4,6 +4,9 @@
 	--win-titleBar-backgroundColor: #11111B;
 	--win-titleButton-color: #B9BBBE;
 	--win-titleButton-hoverColor: #272733;
+
+    --win-resizeBar-thickness: 3px;
+    --win-resizeBar-touchThickness: 22px;
 }
 
 * {
@@ -59,6 +62,18 @@ iframe {
     justify-content: flex-start;
 }
 
+.muffins-justifyEnd {
+    -webkit-box-pack: end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+
+.muffins-justifySpaceBetween {
+    -webkit-box-pack: space-between;
+    -ms-flex-pack: space-between;
+    justify-content: space-between;
+}
+
 .muffins-justifyCenter {
     -webkit-box-pack: center;
     -ms-flex-pack: center;
@@ -72,10 +87,38 @@ iframe {
     flex-direction: row-reverse;
 }
 
+.muffins-directionRow {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
+    flex-direction: row;
+}
+
+.muffins-directionColumn {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+}
+
 .muffins-alignStretch {
     -webkit-box-align: stretch;
     -ms-flex-align: stretch;
     align-items: stretch;
+}
+
+.muffins-alignCenter {
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+}
+
+.muffins-alignEnd {
+    margin-top: auto;
+
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
 }
 
 .win-appMount {
@@ -106,7 +149,7 @@ iframe {
 	height: 22px;
     background-color: var(--win-titleBar-backgroundColor);
 
-    z-index: 1001;
+    z-index: 1000;
     -ms-flex-negative: 0;
     flex-shrink: 0;
 }
@@ -125,6 +168,11 @@ iframe {
     background-color: var(--win-titleButton-hoverColor);
 }
 
+.win-titleText {
+    margin-left: 10px;
+    color: white;
+}
+
 .win-window {
 	position:absolute; 
 
@@ -139,5 +187,59 @@ iframe {
 .win-appCover {
 	display:none; 
 	position:absolute; 
-	z-index:1000;
+	z-index: 0;
+}
+
+.win-resizeContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+.win-resize {
+    background-color: transparent;
+    z-index: 0;
+}
+
+.win-resize-width {
+    height: 100%;
+    width: var(--win-resizeBar-thickness);
+
+    cursor: ew-resize;
+}
+
+.win-resize-height {
+    height: var(--win-resizeBar-thickness);
+    width: 100%;
+
+    cursor: ns-resize;
+}
+
+.win-resizeCorner {
+    width: var(--win-resizeBar-thickness);
+    height: var(--win-resizeBar-thickness);
+
+    background-color: transparent;
+
+    z-index:0;
+}
+
+.win-resizeCornerTouch {
+    width: var(--win-resizeBar-touchThickness);
+    height: var(--win-resizeBar-touchThickness);
+
+    background-color: transparent;
+
+    z-index:0;
+}
+.win-resize-fill {
+    background-color: var(--win-titleButton-color)
+}
+
+.win-resize-cornerNESW {
+    cursor: nesw-resize;
+}
+
+.win-resize-cornerNWSE {
+    cursor: nwse-resize;
 }
