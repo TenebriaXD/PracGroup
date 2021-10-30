@@ -1,7 +1,7 @@
 var windowID = 0;
 var openedWindows = [];
 
-function CreateWindow()
+function CreateWindow(src)
 {
 	let win = new Window();
 
@@ -62,7 +62,7 @@ function CreateWindow()
 	openedWindows.push(win);
 	UpdateWindows(true);
 
-	win.LoadSrc("./site1/index.html");
+	win.LoadSrc(src);
 }
 
 function UpdateWindows(resetEventListeners)
