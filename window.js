@@ -4,71 +4,24 @@ var openedWindows = [];
 function CreateWindow(src)
 {
 	let win = new Window();
-
-	let winHTML = 
-	`<div id="window_${win.Id}" class="win-window">
-		<div class="muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container">
-			<div id="windowResizeWidthLeft_${win.Id}" class="muffins-flex muffins-alignCenter win-resize win-resize-width"></div>
-			<div id="windowResizeWidthRight_${win.Id}" class="muffins-flex muffins-alignCenter win-resize win-resize-width"></div>
-		</div>
-		<div class="muffins-flex muffins-directionColumn muffins-justifySpaceBetween win-resizeContainer win-container">
-			<div id="windowResizeHeightTop_${win.Id}" class="muffins-flex muffins-alignCenter win-resize win-resize-height"></div>
-			<div id="windowResizeHeightBottom_${win.Id}" class="muffins-flex muffins-alignCenter win-resize win-resize-height"></div>
-		</div>
-		<div class="muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container">
-			<div id="windowResizeTopLeft_${win.Id}" class="muffins-flex muffins-alignCenter win-resizeCorner win-resize-cornerNWSE"></div>
-			<div id="windowResizeTopRight_${win.Id}" class="muffins-flex muffins-alignCenter win-resizeCorner win-resize-cornerNESW"></div>
-		</div>
-		<div class="muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container">
-			<div id="windowResizeBottomLeft_${win.Id}" class="muffins-flex muffins-alignEnd win-resizeCorner win-resize-cornerNESW"></div>
-			<div id="windowResizeBottomRight_${win.Id}" class="muffins-flex muffins-alignEnd win-resizeCorner win-resize-cornerNWSE"></div>
-		</div>
-		<div class="muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container">
-			<div id="windowResizeTouch_${win.Id}" class="muffins-flex muffins-alignCenter win-resize-fill win-resizeCornerTouch win-resize-cornerNWSE"></div>
-			<div class="muffins-flex muffins-alignCenter win-resizeCornerTouch win-resize-cornerNESW"></div>
-		</div>
-		<div class="win-appMount">
-			<div id="windowTitleContainer_${win.Id}" class="muffins-flex muffins-justifyStart muffins-directionReversed muffins-alignStretch win-titleBar">
-				<div id="windowClose_${win.Id}" class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" tabindex="-1" role="button" id="close-btn" aria-label="Close">
-					<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
-						<polygon fill="currentColor" fill-rule="evenodd" points="11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1"></polygon>
-					</svg>
-				</div>
-				<div id="windowMaximize_${win.Id}" class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" tabindex="-1" role="button" id="max-btn" aria-label="Maximize">
-					<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
-						<rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect>
-					</svg>
-				</div>
-				<div id="windowMinimize_${win.Id}" class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" tabindex="-1" role="button" id="min-btn" aria-label="Minimize">
-					<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
-						<rect fill="currentColor" width="10" height="1" x="1" y="6"></rect>
-					</svg>
-				</div>
-				<div id="windowTitleBar_${win.Id}" class="muffins-flex muffins-alignCenter muffins-justifyCenter muffins-grow">
-					<div id="windowText_${win.Id}" class="muffins-flex muffins-directionRow muffins-alignCenter win-container win-titleText">BRUH</div>
-				</div>
-			</div>
-
-			<div class="win-container">
-				<div class="win-appCover win-container" id="windowAppCover_${win.Id}">
-				</div>
-				<iframe class="win-container" id="windowIframe_${win.Id}" src=""></iframe>
-			</div>
-		</div>
-	</div>`;
-
-	document.getElementById("mainContainer").innerHTML += winHTML;
+	win.Init();
 
 	openedWindows.push(win);
-	UpdateWindows(true);
+	UpdateWindows();
 
 	win.LoadSrc(src);
 }
 
-function UpdateWindows(resetEventListeners)
+function UpdateWindows()
 {
 	for (let i = 0; i < openedWindows.length; i++)
-		openedWindows[i].Init(i, resetEventListeners, (i == openedWindows.length - 1));
+		openedWindows[i].SetFocus(i, (i == openedWindows.length - 1));
+}
+
+function UpdateWindowSize()
+{
+	for (let i = 0; i < openedWindows.length; i++)
+		openedWindows[i].OnResize();
 }
 
 var Window = function()
@@ -113,36 +66,172 @@ var Window = function()
 		height: null
 	};
 
-	this.Init = function(focus, resetEventListeners, isFocus)
+	this.CreateDOM = function()
 	{
-		this.focus = focus;
+		let fragment = document.createDocumentFragment();
+		
+		this.DOM.window = document.createElement("div");
+		this.DOM.window.setAttribute("class", "win-window");
 
-		this.DOM.close = document.getElementById("windowClose_" + this.Id);
-		this.DOM.maximize = document.getElementById("windowMaximize_" + this.Id);
-		this.DOM.minimize = document.getElementById("windowMinimize_" + this.Id);
-		this.DOM.window = document.getElementById("window_" + this.Id);
-		this.DOM.windowText = document.getElementById("windowText_" + this.Id);
-		if (platformMobile) this.DOM.windowText.style.marginLeft = "32px";
-		this.DOM.titleBar = document.getElementById("windowTitleBar_" + this.Id);
-		this.DOM.titleContainer = document.getElementById("windowTitleContainer_" + this.Id);
-		this.DOM.iframe = document.getElementById("windowIframe_" + this.Id);
-		this.DOM.appCover = document.getElementById("windowAppCover_" + this.Id);
+		let windowResizeWidth = document.createElement("div");
+		windowResizeWidth.setAttribute("class", "muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container");
+		
+		this.DOM.resize.widthLeft = document.createElement("div");
+		this.DOM.resize.widthLeft.setAttribute("class", "muffins-flex muffins-alignCenter win-resize win-resize-width");
 
-		this.DOM.resize.touch = document.getElementById("windowResizeTouch_" + this.Id);
+		this.DOM.resize.widthRight = document.createElement("div");
+		this.DOM.resize.widthRight.setAttribute("class", "muffins-flex muffins-alignCenter win-resize win-resize-width");
+
+		let windowResizeHeight = document.createElement("div");
+		windowResizeHeight.setAttribute("class", "muffins-flex muffins-directionColumn muffins-justifySpaceBetween win-resizeContainer win-container");
+		
+		this.DOM.resize.heightTop = document.createElement("div");
+		this.DOM.resize.heightTop.setAttribute("class", "muffins-flex muffins-alignCenter win-resize win-resize-height");
+
+		this.DOM.resize.heightBottom = document.createElement("div");
+		this.DOM.resize.heightBottom.setAttribute("class", "muffins-flex muffins-alignCenter win-resize win-resize-height");
+		
+		let windowResizeTop = document.createElement("div");
+		windowResizeTop.setAttribute("class", "muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container");
+
+		this.DOM.resize.topLeft = document.createElement("div");
+		this.DOM.resize.topLeft.setAttribute("class", "muffins-flex muffins-alignCenter win-resizeCorner win-resize-cornerNWSE");
+
+		this.DOM.resize.topRight = document.createElement("div");
+		this.DOM.resize.topRight.setAttribute("class", "muffins-flex muffins-alignCenter win-resizeCorner win-resize-cornerNESW");
+
+		let windowResizeBottom = document.createElement("div");
+		windowResizeBottom.setAttribute("class", "muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container");
+
+		this.DOM.resize.bottomLeft = document.createElement("div");
+		this.DOM.resize.bottomLeft.setAttribute("class", "muffins-flex muffins-alignEnd win-resizeCorner win-resize-cornerNESW");
+
+		this.DOM.resize.bottomRight = document.createElement("div");
+		this.DOM.resize.bottomRight.setAttribute("class", "muffins-flex muffins-alignEnd win-resizeCorner win-resize-cornerNWSE");
+
+		let windowResizeTouch = document.createElement("div");
+		windowResizeTouch.setAttribute("class", "muffins-flex muffins-directionRow muffins-justifySpaceBetween win-resizeContainer win-container");
+
+		this.DOM.resize.touch = document.createElement("div");
+		this.DOM.resize.touch.setAttribute("class", "muffins-flex muffins-alignCenter win-resize-fill win-resizeCornerTouch win-resize-cornerNWSE");
 		if (platformMobile) this.DOM.resize.touch.style.display = "block"; else this.DOM.resize.touch.style.display = "none";
-		this.DOM.resize.widthLeft = document.getElementById("windowResizeWidthLeft_" + this.Id);
-		this.DOM.resize.widthRight = document.getElementById("windowResizeWidthRight_" + this.Id);
-		this.DOM.resize.heightTop = document.getElementById("windowResizeHeightTop_" + this.Id);
-		this.DOM.resize.heightBottom = document.getElementById("windowResizeHeightBottom_" + this.Id);
-		this.DOM.resize.topLeft = document.getElementById("windowResizeTopLeft_" + this.Id);
-		this.DOM.resize.topRight = document.getElementById("windowResizeTopRight_" + this.Id);
-		this.DOM.resize.bottomLeft = document.getElementById("windowResizeBottomLeft_" + this.Id);
-		this.DOM.resize.bottomRight = document.getElementById("windowResizeBottomRight_" + this.Id);
 
-		if (resetEventListeners) this.InitEventListeners();
-		if (isFocus) this.Release(); else this.Block();
+		let tempResizeTouch = document.createElement("div");
+		tempResizeTouch.setAttribute("class", "muffins-flex muffins-alignCenter win-resizeCornerTouch");
 
-		this.SetFocus(focus);
+		let appMount = document.createElement("div");
+		appMount.setAttribute("class", "win-appMount");
+
+		this.DOM.titleContainer = document.createElement("div");
+		this.DOM.titleContainer.setAttribute("class", "muffins-flex muffins-justifyStart muffins-directionReversed muffins-alignStretch win-titleBar");
+
+		let buttonClassList = "muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton";
+		let svgNameSpace = "http://www.w3.org/2000/svg";
+
+		this.DOM.close = document.createElement("div");
+		this.DOM.close.setAttribute("class", buttonClassList);
+		let svgDOMClose = document.createElementNS(svgNameSpace, "svg");
+		svgDOMClose.setAttribute("aria-hidden", "false");
+		svgDOMClose.setAttribute("width", "12");
+		svgDOMClose.setAttribute("height", "12");
+		svgDOMClose.setAttribute("viewBox", "0 0 12 12");
+		let svgClose = document.createElementNS(svgNameSpace, "polygon");
+		svgClose.setAttribute("fill", "currentColor");
+		svgClose.setAttribute("fill-rule", "evenodd");
+		svgClose.setAttribute("points", "11 1.576 6.583 6 11 10.424 10.424 11 6 6.583 1.576 11 1 10.424 5.417 6 1 1.576 1.576 1 6 5.417 10.424 1");
+		svgDOMClose.appendChild(svgClose);
+		this.DOM.close.appendChild(svgDOMClose);
+
+		this.DOM.maximize = document.createElement("div");
+		this.DOM.maximize.setAttribute("class", buttonClassList);
+		let svgDOMMaximize = document.createElementNS(svgNameSpace, "svg");
+		svgDOMMaximize.setAttribute("aria-hidden", "false");
+		svgDOMMaximize.setAttribute("width", "12");
+		svgDOMMaximize.setAttribute("height", "12");
+		svgDOMMaximize.setAttribute("viewBox", "0 0 12 12");
+		let svgMaximize = document.createElementNS(svgNameSpace, "rect");
+		svgMaximize.setAttribute("width", "9");
+		svgMaximize.setAttribute("height", "9");
+		svgMaximize.setAttribute("x", "1.5");
+		svgMaximize.setAttribute("y", "1.5");
+		svgMaximize.setAttribute("fill", "none");
+		svgMaximize.setAttribute("stroke", "currentColor");
+		svgDOMMaximize.appendChild(svgMaximize);
+		this.DOM.maximize.appendChild(svgDOMMaximize);
+
+		this.DOM.minimize = document.createElement("div");
+		this.DOM.minimize.setAttribute("class", buttonClassList);
+		let svgDOMMinimize = document.createElementNS(svgNameSpace, "svg");
+		svgDOMMinimize.setAttribute("aria-hidden", "false");
+		svgDOMMinimize.setAttribute("width", "12");
+		svgDOMMinimize.setAttribute("height", "12");
+		svgDOMMinimize.setAttribute("viewBox", "0 0 12 12");
+		let svgMinimize = document.createElementNS(svgNameSpace, "rect");
+		svgMinimize.setAttribute("fill", "currentColor");
+		svgMinimize.setAttribute("width", "10");
+		svgMinimize.setAttribute("height", "1");
+		svgMinimize.setAttribute("x", "1");
+		svgMinimize.setAttribute("y", "6");
+		svgDOMMinimize.appendChild(svgMinimize);
+		this.DOM.minimize.appendChild(svgDOMMinimize);
+
+		this.DOM.titleBar = document.createElement("div");
+		this.DOM.titleBar.setAttribute("class", "muffins-flex muffins-alignCenter muffins-justifyCenter muffins-grow");
+		this.DOM.windowText = document.createElement("div");
+		this.DOM.windowText.setAttribute("class", "muffins-flex muffins-directionRow muffins-alignCenter win-container win-titleText");
+		if (platformMobile) this.DOM.windowText.style.marginLeft = "32px";
+		this.DOM.titleBar.appendChild(this.DOM.windowText);
+
+		let windowContainer = document.createElement("div");
+		windowContainer.setAttribute("class", "win-container");
+
+		this.DOM.appCover = document.createElement("div");
+		this.DOM.appCover.setAttribute("class", "win-appCover win-container");
+
+		this.DOM.iframe = document.createElement("iframe");
+		this.DOM.iframe.setAttribute("class", "win-container");
+
+		windowResizeWidth.appendChild(this.DOM.resize.widthLeft);
+		windowResizeWidth.appendChild(this.DOM.resize.widthRight);
+		this.DOM.window.appendChild(windowResizeWidth);
+
+		windowResizeHeight.appendChild(this.DOM.resize.heightTop);
+		windowResizeHeight.appendChild(this.DOM.resize.heightBottom);
+		this.DOM.window.appendChild(windowResizeHeight);
+
+		windowResizeTop.appendChild(this.DOM.resize.topLeft);
+		windowResizeTop.appendChild(this.DOM.resize.topRight);
+		this.DOM.window.appendChild(windowResizeTop);
+
+		windowResizeBottom.appendChild(this.DOM.resize.bottomLeft);
+		windowResizeBottom.appendChild(this.DOM.resize.bottomRight);
+		this.DOM.window.appendChild(windowResizeBottom);
+
+		windowResizeTouch.appendChild(this.DOM.resize.touch);
+		windowResizeTouch.appendChild(tempResizeTouch);
+		this.DOM.window.appendChild(windowResizeTouch);
+
+		this.DOM.titleContainer.appendChild(this.DOM.close);
+		this.DOM.titleContainer.appendChild(this.DOM.maximize);
+		this.DOM.titleContainer.appendChild(this.DOM.minimize);
+		this.DOM.titleContainer.appendChild(this.DOM.titleBar);
+		appMount.appendChild(this.DOM.titleContainer);
+
+		windowContainer.appendChild(this.DOM.appCover);
+		windowContainer.appendChild(this.DOM.iframe);
+		appMount.appendChild(windowContainer);
+
+		this.DOM.window.appendChild(appMount);
+
+		fragment.appendChild(this.DOM.window);
+
+		document.getElementById("mainContainer").appendChild(fragment);
+	}
+
+	this.Init = function()
+	{
+		this.CreateDOM();
+		this.InitEventListeners();
 	};
 
 	this.InitEventListeners = function()
@@ -200,11 +289,14 @@ var Window = function()
 	this.LoadSrc = function(src)
 	{
 		this.DOM.windowText.innerHTML = src;
-		this.DOM.iframe.setAttribute("src", src);
+		this.DOM.iframe.src = src;
 	}
 
-	this.SetFocus = function(focus)
+	this.SetFocus = function(focus, isFocus)
 	{
+		this.focus = focus;
+		if (isFocus) this.Release(); else this.Block();
+
 		focus *= 6;
 		this.DOM.window.style.zIndex = focus.toString();
 		this.DOM.appCover.style.zIndex = (focus + 1).toString();
@@ -228,8 +320,30 @@ var Window = function()
 	{
 		openedWindows.splice(this.focus, 1);
 		openedWindows.push(this);
-		UpdateWindows(false);
+		UpdateWindows();
 	}
+
+	this.OnResize = function()
+	{
+		if (this.transform.maximized == true)
+		{
+			this.DOM.window.style.top = "40px";
+			this.DOM.window.style.left = "0px";
+			this.DOM.window.style.width = (window.innerWidth) + "px";
+			this.DOM.window.style.height = (window.innerHeight - 40) + "px";
+		}
+		else
+		{
+			if (this.DOM.window.offsetTop > window.innerHeight - 22)
+			{
+				this.DOM.window.style.top = (window.innerHeight - 22) + "px";
+			}
+			if (this.DOM.window.offsetLeft > window.innerWidth - 10)
+			{
+				this.DOM.window.style.left = (window.innerWidth - 10) + "px";
+			}
+		}
+	};
 
 	this.Close = function()
 	{
