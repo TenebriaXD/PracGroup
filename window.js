@@ -57,6 +57,8 @@ var Window = function(windowName)
 	};
 
 	this.transform = {
+		init: false,
+		src: null,
 		maximized: false,
 		minimized: false,
 		top: null,
@@ -287,6 +289,7 @@ var Window = function(windowName)
 
 	this.LoadSrc = function(src)
 	{
+		this.transform.src = src;
 		this.DOM.windowText.innerHTML = src;
 		this.DOM.iframe.src = src;
 	}
