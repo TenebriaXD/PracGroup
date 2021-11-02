@@ -398,6 +398,8 @@ var Window = function(windowName)
 		start: { x:0, y:0 },
 
 		Update: (clientX, clientY, left, right, top, bottom) => {
+			this.transform.maximized = false;
+
 			if (left || right)
 			{
 				if (clientX > 0 && clientX < window.innerWidth)
@@ -484,6 +486,15 @@ var Window = function(windowName)
 
 		DOMUpdate: (eventX, eventY) =>
 		{
+			if (this.transform.maximized)
+			{
+				this.transform.maximized = false;
+				this.DOM.window.style.width = this.transform.width;
+				this.DOM.window.style.height = this.transform.height;
+
+				this.DOM.window.style.left = (eventX - this.DOM.window.offsetWidth / 2) + "px";
+			}
+
 			if (eventX < 10 || eventX > window.innerWidth - 10) eventX = this.Drag.start.x;
 
 			let posX = this.Drag.start.x - eventX;
@@ -502,6 +513,12 @@ var Window = function(windowName)
 
 			this.DOM.window.style.left = posX + "px";
 			this.DOM.window.style.top = posY + "px";
+		},
+
+		DOMClose: () =>
+		{
+			if (this.DOM.window.offsetTop == titleBar.height)
+				this.Maximize();
 		},
 
 		TouchStart: (event) => {
@@ -523,6 +540,7 @@ var Window = function(windowName)
 		},
 		TouchClose: (event) => {
 			this.Release();
+			this.Drag.DOMClose();
 
 			document.ontouchmove = null;
     		document.ontouchend = null;
@@ -548,6 +566,7 @@ var Window = function(windowName)
 		},
 		Close: (event) => {
 			this.Release();
+			this.Drag.DOMClose();
 
 			document.onmouseup = null;
     		document.onmousemove = null;
