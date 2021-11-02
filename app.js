@@ -152,8 +152,16 @@ var App = function()
 		initial: { x:0, y:0 },
 		start: { x:0, y:0 },
 
+		OpenEvent: () =>
+		{
+			this.Select();
+		},
+
 		DOMUpdate: (eventX, eventY) =>
 		{
+			this.DOM.window.setAttribute("class", "win-desktopAppMount");
+			this.DOM.tooltip.style.display = "none";
+
 			for (let i = 0; i < openedWindows.length; i++)
 				openedWindows[i].DOM.appCover.style.display = "block";
 
@@ -192,6 +200,9 @@ var App = function()
 
 		CloseEvent: (eventX, eventY) =>
 		{
+			this.DOM.window.setAttribute("class", "win-desktopAppMount win-tooltip");
+			this.DOM.tooltip.style.display = "block";
+
 			for (let i = 0; i < openedWindows.length; i++)
 				openedWindows[i].DOM.appCover.style.display = "none";
 
@@ -222,7 +233,7 @@ var App = function()
 			this.Drag.initial.x = event.changedTouches[0].clientX;
 			this.Drag.initial.y = event.changedTouches[0].clientY;
 
-			this.Select();
+			this.Drag.OpenEvent();
 
 			document.ontouchmove = this.Drag.TouchUpdate;
 			document.ontouchend = this.Drag.TouchClose;
@@ -248,7 +259,7 @@ var App = function()
 			this.Drag.initial.x = event.clientX;
 			this.Drag.initial.y = event.clientY;
 
-			this.Select();
+			this.Drag.OpenEvent();
 
 			document.onmousemove = this.Drag.Update;
 			document.onmouseup = this.Drag.Close;
