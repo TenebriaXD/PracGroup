@@ -4,6 +4,12 @@ var titleBar = {
 	height: 0 //40
 }
 
+function UpdateSize()
+{
+	UpdateWindowSize();
+	UpdateAppSize();
+}
+
 function InitDesktop()
 {
 	EventBlankClick.push(UpdateAppSelection);

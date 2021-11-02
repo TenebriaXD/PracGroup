@@ -261,6 +261,14 @@ var App = function()
 
 	this.OnResize = function()
 	{
+		if (this.DOM.window.offsetTop + 70 > window.innerHeight)
+		{
+			this.DOM.window.style.top = (window.innerHeight - 70) + "px";
+		}
 
+		if (this.DOM.window.offsetLeft + 60 > window.innerWidth)
+		{
+			this.DOM.window.style.left = (window.innerWidth - 60) + "px";
+		}
 	};
 }
