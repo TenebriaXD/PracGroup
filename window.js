@@ -14,7 +14,7 @@ function CreateWindow(src, windowName)
 function UpdateWindows()
 {
 	for (let i = 0; i < openedWindows.length; i++)
-		openedWindows[i].SetFocus(i, (i == openedWindows.length - 1));
+		openedWindows[i].SetFocus(i);
 }
 
 function UpdateWindowSize()
@@ -291,10 +291,9 @@ var Window = function(windowName)
 		this.DOM.iframe.src = src;
 	}
 
-	this.SetFocus = function(focus, isFocus)
+	this.SetFocus = function(focus)
 	{
 		this.focus = focus;
-		if (isFocus) this.Release(); else this.Block();
 
 		focus = desktopApps.length + focus * 6;
 		this.DOM.window.style.zIndex = focus.toString();
@@ -385,12 +384,14 @@ var Window = function(windowName)
 
 	this.Block = function()
 	{
-		this.DOM.appCover.style.display = "block";
+		for (let i = 0; i < openedWindows.length; i++)
+			openedWindows[i].DOM.appCover.style.display = "block";
 	};
 
 	this.Release = function()
 	{
-		this.DOM.appCover.style.display = "none";
+		for (let i = 0; i < openedWindows.length; i++)
+			openedWindows[i].DOM.appCover.style.display = "none";
 	};
 
 	this.Resize = {
