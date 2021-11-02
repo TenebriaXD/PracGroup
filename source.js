@@ -63,8 +63,8 @@ function InitDesktop()
 				return;
 			}
 		}
-		CreateWindow("./site4/index.html", "site4"); 
-	}, { top: 170, left: 120 }, "Site-4", "Boomer", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+		CreateWindow("./site4/site4.html", "site4"); 
+	}, { top: 170, left: 120 }, "Games", "Video Games", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
 }
 
 var EventBlankClick = [];
