@@ -9,6 +9,7 @@
     --win-resizeBar-touchThickness: 22px;
 
     --win-desktopApp-hoverColor: rgba(127, 173, 245, 0.3);
+    --win-desktopApp-tooltip-background: #272734;
 }
 
 * {
@@ -330,13 +331,13 @@ iframe {
 .win-tooltip .win-desktopApp-tooltip-top {
     visibility: hidden;
     width: 120px;
-    background-color: var(--background-tertiary);
+    background-color: var(--win-desktopApp-tooltip-background);
     color: #fff;
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
     position: absolute;
-    z-index: 100;
+    z-index: 1000;
     bottom: 120%;
     left: 50%;
     margin-left: -60px;
@@ -350,19 +351,19 @@ iframe {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: var(--background-tertiary) transparent transparent transparent;
+  border-color: var(--win-desktopApp-tooltip-background) transparent transparent transparent;
 }
 
 .win-tooltip .win-desktopApp-tooltip-bottom {
     visibility: hidden;
     width: 120px;
-    background-color: var(--background-tertiary);
+    background-color: var(--win-desktopApp-tooltip-background);
     color: #fff;
     text-align: center;
     border-radius: 6px;
     padding: 5px 0;
     position: absolute;
-    z-index: 100;
+    z-index: 1000;
     top: 120%;
     left: 50%;
     margin-left: -60px;
@@ -376,7 +377,7 @@ iframe {
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent var(--background-tertiary) transparent;
+    border-color: transparent transparent var(--win-desktopApp-tooltip-background) transparent;
 }
 
 .win-tooltip:hover .win-desktopApp-tooltip-top {

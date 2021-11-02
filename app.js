@@ -34,6 +34,7 @@ var App = function()
 
 	this.DOM = {
 		window: null,
+		container: null,
 		icon: null,
 		text: null,
 		tooltip: null
@@ -56,8 +57,8 @@ var App = function()
 		this.DOM.tooltip = document.createElement("span");
 		this.DOM.tooltip.setAttribute("class", "win-desktopApp-tooltip-top");
 
-		let appContainer = document.createElement("div");
-		appContainer.setAttribute("class", "muffins-flex muffins-directionColumn muffins-justifySpaceBetween win-desktopApp win-container");
+		this.DOM.container = document.createElement("div");
+		this.DOM.container.setAttribute("class", "muffins-flex muffins-directionColumn muffins-justifySpaceBetween win-desktopApp win-container");
 
 		this.DOM.icon = document.createElement("div");
 		this.DOM.icon.setAttribute("class", "win-desktopApp-icon");
@@ -80,11 +81,11 @@ var App = function()
 		textRow.appendChild(textSpacer2);
 		textContainer.appendChild(textRow);
 
-		appContainer.appendChild(this.DOM.icon);
-		appContainer.appendChild(textContainer);
+		this.DOM.container.appendChild(this.DOM.icon);
+		this.DOM.container.appendChild(textContainer);
 
 		this.DOM.window.appendChild(this.DOM.tooltip);
-		this.DOM.window.appendChild(appContainer);
+		this.DOM.window.appendChild(this.DOM.container);
 		//this.DOM.window.appendChild(this.DOM.appCover);
 		fragment.appendChild(this.DOM.window);
 
@@ -137,7 +138,8 @@ var App = function()
 			this.Deselect();
 		}
 
-		this.DOM.window.style.zIndex = focus.toString();
+		this.DOM.container.style.zIndex = focus.toString();
+		this.DOM.tooltip.style.zIndex = 1000;
 	}
 
 	this.Deselect = function()
@@ -152,6 +154,9 @@ var App = function()
 
 		DOMUpdate: (eventX, eventY) =>
 		{
+			for (let i = 0; i < openedWindows.length; i++)
+				openedWindows[i].DOM.appCover.style.display = "block";
+
 			let posX = this.Drag.start.x - eventX;
 		    let posY = this.Drag.start.y - eventY;
 
@@ -187,6 +192,9 @@ var App = function()
 
 		CloseEvent: (eventX, eventY) =>
 		{
+			for (let i = 0; i < openedWindows.length; i++)
+				openedWindows[i].DOM.appCover.style.display = "none";
+
 			if (eventX == this.Drag.initial.x && eventY == this.Drag.initial.y)
 			{
 				if (this.transform.selected)

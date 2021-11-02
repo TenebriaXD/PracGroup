@@ -38,7 +38,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site2/index.html", "site2"); 
-	}, { top: 80, left: 120 }, "Site-2", "Boomer", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+	}, { top: 80, left: 120 }, "DION", "DION Systems", "https://dion.systems/assets/logo_large_9E3447CD-EA3A7171-A9690817-9A973568.png");
 	
 	CreateApp(() => { 
 		for (let i = 0; i < openedWindows.length; i++)
@@ -51,7 +51,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site3/index.html", "site3"); 
-	}, { top: 170, left: 50 }, "Site-3", "Boomer", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+	}, { top: 170, left: 50 }, "Facts", "100% True Computer Facts", "./site3/site3-icon.png");
 	
 	CreateApp(() => { 
 		for (let i = 0; i < openedWindows.length; i++)
@@ -64,7 +64,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site4/site4.html", "site4"); 
-	}, { top: 170, left: 120 }, "Games", "Video Games", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+	}, { top: 170, left: 120 }, "Games", "Video Games", "./site4/site4-icon.png");
 }
 
 var EventBlankClick = [];
