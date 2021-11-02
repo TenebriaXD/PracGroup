@@ -54,7 +54,7 @@ var App = function()
 		this.DOM.window.setAttribute("class", "win-desktopAppMount win-tooltip");
 
 		this.DOM.tooltip = document.createElement("span");
-		this.DOM.tooltip.setAttribute("class", "win-desktopApp-tooltip");
+		this.DOM.tooltip.setAttribute("class", "win-desktopApp-tooltip-top");
 
 		let appContainer = document.createElement("div");
 		appContainer.setAttribute("class", "muffins-flex muffins-directionColumn muffins-justifySpaceBetween win-desktopApp win-container");
@@ -174,6 +174,15 @@ var App = function()
 
 			this.DOM.window.style.left = posX + "px";
 			this.DOM.window.style.top = posY + "px";
+
+			if (posY < titleBar.height + 50)
+			{
+				this.DOM.tooltip.setAttribute("class", "win-desktopApp-tooltip-bottom");
+			}
+			else
+			{
+				this.DOM.tooltip.setAttribute("class", "win-desktopApp-tooltip-top");
+			}
 		},
 
 		CloseEvent: (eventX, eventY) =>

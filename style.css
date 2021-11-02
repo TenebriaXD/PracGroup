@@ -326,7 +326,7 @@ iframe {
     font-size: 14px;
 }
 
-.win-tooltip .win-desktopApp-tooltip {
+.win-tooltip .win-desktopApp-tooltip-top {
     visibility: hidden;
     width: 120px;
     background-color: var(--background-tertiary);
@@ -341,7 +341,7 @@ iframe {
     margin-left: -60px;
 }
 
-.win-tooltip .win-desktopApp-tooltip::after {
+.win-tooltip .win-desktopApp-tooltip-top::after {
   content: "";
   position: absolute;
   top: 100%;
@@ -352,6 +352,36 @@ iframe {
   border-color: var(--background-tertiary) transparent transparent transparent;
 }
 
-.win-tooltip:hover .win-desktopApp-tooltip {
+.win-tooltip .win-desktopApp-tooltip-bottom {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--background-tertiary);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 100;
+    top: 120%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.win-tooltip .win-desktopApp-tooltip-bottom::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent var(--background-tertiary) transparent;
+}
+
+.win-tooltip:hover .win-desktopApp-tooltip-top {
+  visibility: visible;
+}
+
+.win-tooltip:hover .win-desktopApp-tooltip-bottom {
   visibility: visible;
 }
