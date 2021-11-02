@@ -161,8 +161,11 @@ var App = function()
 
 		DOMUpdate: (eventX, eventY) =>
 		{
-			this.DOM.window.setAttribute("class", "win-desktopAppMount");
-			this.DOM.tooltip.style.display = "none";
+			if (!platformMobile)
+			{
+				this.DOM.window.setAttribute("class", "win-desktopAppMount");
+				this.DOM.tooltip.style.display = "none";
+			}
 
 			for (let i = 0; i < openedWindows.length; i++)
 				openedWindows[i].DOM.appCover.style.display = "block";
