@@ -496,6 +496,10 @@ var Window = function(windowName)
 				this.DOM.window.style.height = this.transform.height;
 
 				this.DOM.window.style.left = (eventX - this.DOM.window.offsetWidth / 2) + "px";
+				if (this.DOM.window.offsetLeft < 0)
+					this.DOM.window.style.left = "0px";
+				else if (this.DOM.window.offsetLeft + this.DOM.window.offsetWidth > window.innerWidth)
+					this.DOM.window.style.left = (window.innerWidth - this.DOM.window.offsetWidth) + "px";
 			}
 
 			if (eventX < 10 || eventX > window.innerWidth - 10) eventX = this.Drag.start.x;
