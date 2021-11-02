@@ -131,6 +131,7 @@ var App = function()
 		this.focus = focus;
 		if (isFocus) 
 		{
+			if (platformMobile) this.DOM.tooltip.style.visibility = "visible";
 			this.DOM.window.style.backgroundColor = "var(--win-desktopApp-hoverColor)";
 		}
 		else
@@ -146,6 +147,7 @@ var App = function()
 	{
 		this.transform.selected = false;
 		this.DOM.window.style.backgroundColor = "transparent";
+		if (platformMobile) this.DOM.tooltip.style.visibility = "hidden";
 	}
 
 	this.Drag = {
@@ -212,6 +214,7 @@ var App = function()
 				{
 					this.transform.selected = false;
 					this.Action();
+					if (platformMobile) this.DOM.tooltip.style.visibility = "hidden";
 				}
 				else
 				{
