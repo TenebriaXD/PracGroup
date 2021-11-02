@@ -25,7 +25,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site1/index.html", "site1"); 
-	}, { top: 80, left: 50 }, "Site-1", "Artificial Intelligence", "./site1/ai-icon.png");
+	}, { top: 80, left: 50 }, "AI", "Artificial Intelligence", "./site1/ai-icon.png");
 	
 	CreateApp(() => { 
 		for (let i = 0; i < openedWindows.length; i++)
