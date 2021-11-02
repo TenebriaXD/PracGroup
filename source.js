@@ -19,7 +19,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site1/index.html", "site1"); 
-	}, { top: 80, left: 50 }, "Site-1", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+	}, { top: 80, left: 50 }, "Site-1", "Artificial Intelligence", "./site1/ai-icon.png");
 	
 	CreateApp(() => { 
 		for (let i = 0; i < openedWindows.length; i++)
@@ -32,7 +32,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site2/index.html", "site2"); 
-	}, { top: 80, left: 120 }, "Site-2", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+	}, { top: 80, left: 120 }, "Site-2", "Boomer", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
 	
 	CreateApp(() => { 
 		for (let i = 0; i < openedWindows.length; i++)
@@ -45,7 +45,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site3/index.html", "site3"); 
-	}, { top: 170, left: 50 }, "Site-3", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+	}, { top: 170, left: 50 }, "Site-3", "Boomer", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
 	
 	CreateApp(() => { 
 		for (let i = 0; i < openedWindows.length; i++)
@@ -58,7 +58,7 @@ function InitDesktop()
 			}
 		}
 		CreateWindow("./site4/index.html", "site4"); 
-	}, { top: 170, left: 120 }, "Site-4", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
+	}, { top: 170, left: 120 }, "Site-4", "Boomer", "https://pbs.twimg.com/profile_images/1356921365698404356/3OG1HbbM_400x400.jpg");
 }
 
 var EventBlankClick = [];

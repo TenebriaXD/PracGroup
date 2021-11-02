@@ -1,9 +1,9 @@
 desktopApps = [];
 
-function CreateApp(action, position, text, imgsrc)
+function CreateApp(action, position, text, tooltip, imgsrc)
 {
 	let desktopApp = new App();
-	desktopApp.Init(action, position, text, imgsrc);
+	desktopApp.Init(action, position, text, tooltip, imgsrc);
 	desktopApps.push(desktopApp);
 
 	UpdateAppFocus();
@@ -36,6 +36,7 @@ var App = function()
 		window: null,
 		icon: null,
 		text: null,
+		tooltip: null
 		//appCover: null
 	};
 
@@ -50,7 +51,10 @@ var App = function()
 		let fragment = document.createDocumentFragment();
 
 		this.DOM.window = document.createElement("div");
-		this.DOM.window.setAttribute("class", "win-desktopAppMount");
+		this.DOM.window.setAttribute("class", "win-desktopAppMount win-tooltip");
+
+		this.DOM.tooltip = document.createElement("span");
+		this.DOM.tooltip.setAttribute("class", "win-desktopApp-tooltip");
 
 		let appContainer = document.createElement("div");
 		appContainer.setAttribute("class", "muffins-flex muffins-directionColumn muffins-justifySpaceBetween win-desktopApp win-container");
@@ -79,6 +83,7 @@ var App = function()
 		appContainer.appendChild(this.DOM.icon);
 		appContainer.appendChild(textContainer);
 
+		this.DOM.window.appendChild(this.DOM.tooltip);
 		this.DOM.window.appendChild(appContainer);
 		//this.DOM.window.appendChild(this.DOM.appCover);
 		fragment.appendChild(this.DOM.window);
@@ -86,7 +91,7 @@ var App = function()
 		document.getElementById("mainContainer").appendChild(fragment);
 	};
 
-	this.Init = function(action, position, text, imgsrc)
+	this.Init = function(action, position, text, tooltip, imgsrc)
 	{
 		this.Action = action;
 
@@ -98,6 +103,7 @@ var App = function()
 
 		this.DOM.icon.style.backgroundImage = `url('${imgsrc}')`;
 		this.DOM.text.innerHTML = text;
+		this.DOM.tooltip.innerHTML = tooltip;
 	};
 
 	this.InitEventListeners = function()

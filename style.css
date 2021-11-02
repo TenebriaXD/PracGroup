@@ -325,3 +325,33 @@ iframe {
     color: white;
     font-size: 14px;
 }
+
+.win-tooltip .win-desktopApp-tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: var(--background-tertiary);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 100;
+    bottom: 120%;
+    left: 50%;
+    margin-left: -60px;
+}
+
+.win-tooltip .win-desktopApp-tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--background-tertiary) transparent transparent transparent;
+}
+
+.win-tooltip:hover .win-desktopApp-tooltip {
+  visibility: visible;
+}
