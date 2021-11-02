@@ -8,30 +8,31 @@
 
 	<script src="source.js"></script>
 	<script src="window.js"></script>
+	<script src="app.js"></script>
 </head>
 
-<body onresize="UpdateWindowSize();">
-	<div class="win-appMount">
-		<div class="muffins-flex muffins-justifyStart muffins-alignStretch win-titleBar" style="height: 40px;">
-			<div onclick="CreateWindow('./site1/index.html');" class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="close-btn" aria-label="Close">
+<body onresize="UpdateWindowSize();" onload="InitDesktop();">
+	<div class="win-appMount win-desktopBackground">
+		<!--<div class="muffins-flex muffins-justifyStart muffins-alignStretch win-titleBar" style="height: 40px;">
+			<div class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="close-btn" aria-label="Close">
 				<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
 					<rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect>
 				</svg>
 			</div>
-			<div onclick="CreateWindow('./site3/index.html');" class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="max-btn" aria-label="Maximize">
+			<div class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="max-btn" aria-label="Maximize">
 				<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
 					<rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect>
 				</svg>
 			</div>
-			<div onclick="CreateWindow('./site4/index.html');" class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="min-btn" aria-label="Minimize">
+			<div class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="min-btn" aria-label="Minimize">
 				<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
 					<rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect>
 				</svg>
 			</div>
-		</div>
+		</div>-->
 
 		<div id="mainContainer" class="win-container">
-
+			<div class="win-container win-background" onclick="BlankClick();"></div>
 		</div>
 	</div>
 </body>

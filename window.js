@@ -1,9 +1,8 @@
-var windowID = 0;
 var openedWindows = [];
 
-function CreateWindow(src)
+function CreateWindow(src, windowName)
 {
-	let win = new Window();
+	let win = new Window(windowName);
 	win.Init();
 
 	openedWindows.push(win);
@@ -24,11 +23,10 @@ function UpdateWindowSize()
 		openedWindows[i].OnResize();
 }
 
-var Window = function()
+var Window = function(windowName)
 {
-	this.Id = windowID; windowID++;
-
 	this.focus;
+	this.windowName = windowName;
 
 	this.DOM = {
 		window: null,
@@ -60,6 +58,7 @@ var Window = function()
 
 	this.transform = {
 		maximized: false,
+		minimized: false,
 		top: null,
 		left: null,
 		width: null,
@@ -297,7 +296,7 @@ var Window = function()
 		this.focus = focus;
 		if (isFocus) this.Release(); else this.Block();
 
-		focus *= 6;
+		focus = desktopApps.length + focus * 6;
 		this.DOM.window.style.zIndex = focus.toString();
 		this.DOM.appCover.style.zIndex = (focus + 1).toString();
 
@@ -318,6 +317,8 @@ var Window = function()
 
 	this.Focus = function()
 	{
+		if (this.transform.minimized)
+			this.Minimize();
 		openedWindows.splice(this.focus, 1);
 		openedWindows.push(this);
 		UpdateWindows();
@@ -327,10 +328,10 @@ var Window = function()
 	{
 		if (this.transform.maximized == true)
 		{
-			this.DOM.window.style.top = "40px";
+			this.DOM.window.style.top = titleBar.height + "px";
 			this.DOM.window.style.left = "0px";
 			this.DOM.window.style.width = (window.innerWidth) + "px";
-			this.DOM.window.style.height = (window.innerHeight - 40) + "px";
+			this.DOM.window.style.height = (window.innerHeight - titleBar.height) + "px";
 		}
 		else
 		{
@@ -359,10 +360,10 @@ var Window = function()
 			this.transform.width = this.DOM.window.style.width;
 			this.transform.height = this.DOM.window.style.height;
 
-			this.DOM.window.style.top = "40px";
+			this.DOM.window.style.top = titleBar.height + "px";
 			this.DOM.window.style.left = "0px";
 			this.DOM.window.style.width = (window.innerWidth) + "px";
-			this.DOM.window.style.height = (window.innerHeight - 40) + "px";
+			this.DOM.window.style.height = (window.innerHeight - titleBar.height) + "px";
 		}
 		else
 		{
@@ -375,7 +376,11 @@ var Window = function()
 	};
 	this.Minimize = function()
 	{
-		this.DOM.window.style.display = "none";
+		if (this.transform.minimized)
+			this.DOM.window.style.display = "block";
+		else
+			this.DOM.window.style.display = "none";
+		this.transform.minimized = !this.transform.minimized;
 	};
 
 	this.Block = function()
@@ -414,7 +419,7 @@ var Window = function()
 			}
 			if (top || bottom)
 			{
-				if (clientY > 40 && clientY < window.innerHeight)
+				if (clientY > titleBar.height && clientY < window.innerHeight)
 				{
 					let posY = this.Resize.start.y - clientY;
 
@@ -487,8 +492,8 @@ var Window = function()
 		    posY = this.DOM.window.offsetTop - posY;
 
 		    this.Drag.start.x = eventX;
-		    if (posY < 40) 
-		    	posY = 40; 
+		    if (posY < titleBar.height) 
+		    	posY = titleBar.height; 
 		    else if (posY > window.innerHeight - 22) 
 		    	posY = window.innerHeight - 22;
 		    else 

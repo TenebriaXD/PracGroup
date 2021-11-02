@@ -7,6 +7,8 @@
 
     --win-resizeBar-thickness: 3px;
     --win-resizeBar-touchThickness: 22px;
+
+    --win-desktopApp-hoverColor: rgba(127, 173, 245, 0.3);
 }
 
 * {
@@ -145,6 +147,20 @@ iframe {
     width: 100%;
 }
 
+.win-background {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 0;
+}
+
+.win-desktopBackground {
+    background-image: url("background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 .win-titleBar {
 	height: 22px;
     background-color: var(--win-titleBar-backgroundColor);
@@ -180,8 +196,6 @@ iframe {
 	left: 100px; 
 	width:1200px; 
 	height:700px;
-
-	resize: both;	
 }
 
 .win-appCover {
@@ -242,4 +256,72 @@ iframe {
 
 .win-resize-cornerNWSE {
     cursor: nwse-resize;
+}
+
+.win-desktopAppMount {
+    position:absolute; 
+
+    top: 100px; 
+    left: 100px; 
+    width: 60px; 
+    height: 70px;
+
+    background-color: var(--background-tertiary);
+}
+
+.win-desktopApp {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+.win-desktopApp:hover {
+    background-color: var(--win-desktopApp-hoverColor);
+}
+
+.win-desktopApp-cover {
+    position:absolute; 
+
+    z-index: 0;
+
+    top: 0px; 
+    left: 0px; 
+    width: 100%;
+    height: 100%;
+
+    display: none;
+}
+
+.win-desktopApp-icon {
+    height: 100%;
+    margin: 4px;
+
+    background-image: none;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.win-desktopApp-iconAnim {
+    -webkit-animation:spin 4s linear infinite;
+    -moz-animation:spin 4s linear infinite;
+    animation:spin 4s linear infinite;
+}
+@-moz-keyframes spin { 
+    100% { -moz-transform: rotate(360deg); } 
+}
+@-webkit-keyframes spin { 
+    100% { -webkit-transform: rotate(360deg); } 
+}
+@keyframes spin { 
+    100% { 
+        -webkit-transform: rotate(360deg); 
+        transform:rotate(360deg); 
+    } 
+}
+
+.win-desktopApp-text {
+    width: 100%;
+    height: 15px;
+
+    color: white;
+    font-size: 14px;
 }
