@@ -1,5 +1,11 @@
-var openedWindows = [];
+var openedWindows = []; // Stores all opened windows.
 
+/**
+ * Creates a window with the given src and name.
+ *
+ * @param {string} src The page src to be used by the window.
+ * @param {string} windowName The unique process name of the window.
+ */
 function CreateWindow(src, windowName)
 {
 	let win = new Window(windowName);
@@ -11,23 +17,37 @@ function CreateWindow(src, windowName)
 	win.LoadSrc(src);
 }
 
+/**
+ * Updates the rendering of all windows.
+ */
 function UpdateWindows()
 {
 	for (let i = 0; i < openedWindows.length; i++)
 		openedWindows[i].SetFocus(i);
 }
 
+/**
+ * Updates the window sizes when the page is resized.
+ */
 function UpdateWindowSize()
 {
 	for (let i = 0; i < openedWindows.length; i++)
 		openedWindows[i].OnResize();
 }
 
+/** @class Window representing a window. */
 var Window = function(windowName)
 {
+	/**
+	 * Creates an instance of Window.
+	 *
+	 * @param {string} windowName The unique process name of the window.
+	 */
+
 	this.focus;
 	this.windowName = windowName;
 
+	// Object containing HTML DOM elements for the window.
 	this.DOM = {
 		window: null,
 		windowText: null,
@@ -67,6 +87,9 @@ var Window = function(windowName)
 		height: null
 	};
 
+	/**
+	 * Creates the HTML DOM elements for the window.
+	 */
 	this.CreateDOM = function()
 	{
 		let fragment = document.createDocumentFragment();
@@ -229,16 +252,24 @@ var Window = function(windowName)
 		document.getElementById("mainContainer").appendChild(fragment);
 	}
 
+	/**
+	 * Initializes the Window object.
+	 */
 	this.Init = function()
 	{
 		this.CreateDOM();
 		this.InitEventListeners();
 	};
 
+	/**
+	 * Creates the necessary event listeners for the Window object.
+	 */
 	this.InitEventListeners = function()
 	{
+		// Event listeners for resizing and dragging windows.
 		if (!platformMobile)
 		{
+			// On desktop devices provide edge drag.
 			this.DOM.resize.widthLeft.addEventListener("mousedown", (event) => { this.Focus(); this.Resize.Open(event, true, false, false, false); }, false);
 			this.DOM.resize.widthRight.addEventListener("mousedown", (event) => { this.Focus(); this.Resize.Open(event, false, true, false, false); }, false);
 			this.DOM.resize.heightTop.addEventListener("mousedown", (event) => { this.Focus(); this.Resize.Open(event, false, false, true, false); }, false);
@@ -253,11 +284,13 @@ var Window = function(windowName)
 		}
 		else
 		{
+			// On mobile devices provide a corner drag.
 			this.DOM.resize.touch.addEventListener("touchstart", (event) => { this.Focus(); this.Resize.TouchStart(event); }, false);
 
 			this.DOM.titleBar.addEventListener("touchstart", (event) => { this.Focus(); this.Drag.TouchStart(event); }, false);
 		}
 
+		// Event listener for focusing on a window.
 		this.DOM.appCover.addEventListener("click", (event) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -265,6 +298,7 @@ var Window = function(windowName)
 			this.Focus();
 		});
 
+		// Event listeners for close, maximize, minimize controls.
 		this.DOM.close.addEventListener("click", (event) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -287,6 +321,9 @@ var Window = function(windowName)
 		}, false);
 	}
 
+	/**
+	 * Loads src into window iframe.
+	 */
 	this.LoadSrc = function(src)
 	{
 		this.transform.src = src;
@@ -294,6 +331,9 @@ var Window = function(windowName)
 		this.DOM.iframe.src = src;
 	}
 
+	/**
+	 * Sets a window as the focus.
+	 */
 	this.SetFocus = function(focus)
 	{
 		this.focus = focus;
@@ -317,6 +357,9 @@ var Window = function(windowName)
 		this.DOM.resize.touch.style.zIndex = (focus + 6).toString();
 	}
 
+	/**
+	 * Changes a window to be the focus.
+	 */
 	this.Focus = function()
 	{
 		if (this.transform.minimized)
@@ -326,6 +369,9 @@ var Window = function(windowName)
 		UpdateWindows();
 	}
 
+	/**
+	 * Make sure the window is in a valid position and size when the webpage is resized.
+	 */
 	this.OnResize = function()
 	{
 		if (this.transform.maximized == true)
@@ -348,10 +394,17 @@ var Window = function(windowName)
 		}
 	};
 
+	/**
+	 * Closes the window.
+	 */
 	this.Close = function()
 	{
 		this.DOM.window.remove();
 	};
+
+	/**
+	 * Maximizes the window.
+	 */
 	this.Maximize = function()
 	{
 		if (this.transform.maximized == false)
@@ -376,6 +429,10 @@ var Window = function(windowName)
 			this.DOM.window.style.height = this.transform.height;
 		}
 	};
+
+	/**
+	 * Minimizes the window.
+	 */
 	this.Minimize = function()
 	{
 		if (this.transform.minimized)
@@ -385,21 +442,40 @@ var Window = function(windowName)
 		this.transform.minimized = !this.transform.minimized;
 	};
 
+	/**
+	 * Blocks the window iframe from being controlled.
+	 */
 	this.Block = function()
 	{
 		for (let i = 0; i < openedWindows.length; i++)
 			openedWindows[i].DOM.appCover.style.display = "block";
 	};
 
+	/**
+	 * Releases the window iframe for control.
+	 */
 	this.Release = function()
 	{
 		for (let i = 0; i < openedWindows.length; i++)
 			openedWindows[i].DOM.appCover.style.display = "none";
 	};
 
+	/**
+	 * Resize object for performing resize actions on the window.
+	 */
 	this.Resize = {
-		start: { x:0, y:0 },
+		start: { x:0, y:0 }, // Start position of drag.
 
+		/**
+		 * Performs resize on window DOM elements given the drag operation.
+		 *
+		 * @param {number} clientX X position of cursor / touch performing the drag.
+		 * @param {number} clientY Y position of cursor / touch performing the drag.
+		 * @param {bool} left True if the left side of the window is being resized.
+		 * @param {bool} right True if the right side of the window is being resized.
+		 * @param {bool} top True if the top side of the window is being resized.
+		 * @param {bool} bottom True if the bottom side of the window is being resized.
+		 */
 		Update: (clientX, clientY, left, right, top, bottom) => {
 			this.transform.maximized = false;
 
@@ -445,6 +521,11 @@ var Window = function(windowName)
 			}
 		},
 
+		/**
+		 * Initializes touch resize controls triggered by touch event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchStart: (event) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -457,6 +538,12 @@ var Window = function(windowName)
 			document.ontouchmove = (event) => { this.Resize.Update(event.changedTouches[0].clientX, event.changedTouches[0].clientY, true, false, true, false); };
 			document.ontouchend = this.Resize.Close;
 		},
+
+		/**
+		 * Ends touch resize controls triggered by touch event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchClose: (event) => {
 			this.Release();
 
@@ -464,6 +551,11 @@ var Window = function(windowName)
     		document.ontouchend = null;
 		},
 
+		/**
+		 * Initializes mouse resize controls triggered by mouse event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Open: (event, left, right, top, bottom) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -476,6 +568,12 @@ var Window = function(windowName)
 			document.onmousemove = (event) => { this.Resize.Update(event.clientX, event.clientY, left, right, top, bottom); };
 			document.onmouseup = this.Resize.Close;
 		},
+
+		/**
+		 * Ends mouse resize controls triggered by mouse event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Close: (event) => {
 			this.Release();
 
@@ -484,9 +582,18 @@ var Window = function(windowName)
 		}
 	};
 
+	/**
+	 * Drag object for performing drag actions on the window.
+	 */
 	this.Drag = {
-		start: { x:0, y:0 },
+		start: { x:0, y:0 }, // Start position of drag.
 
+		/**
+		 * Performs drag on window DOM elements given the drag operation.
+		 *
+		 * @param {number} clientX X position of cursor / touch performing the drag.
+		 * @param {number} clientY Y position of cursor / touch performing the drag.
+		 */
 		DOMUpdate: (eventX, eventY) =>
 		{
 			if (this.transform.maximized)
@@ -522,12 +629,21 @@ var Window = function(windowName)
 			this.DOM.window.style.top = posY + "px";
 		},
 
+		/**
+		 * Perform special actions at the end of drag if certain conditions are met.
+		 */
 		DOMClose: () =>
 		{
+			// If the window is dragged to the top, maximize it.
 			if (this.DOM.window.offsetTop == titleBar.height)
 				this.Maximize();
 		},
 
+		/**
+		 * Initializes touch drag controls triggered by touch event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchStart: (event) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -540,11 +656,23 @@ var Window = function(windowName)
 			document.ontouchmove = this.Drag.TouchUpdate;
 			document.ontouchend = this.Drag.TouchClose;
 		},
+
+		/**
+		 * Update called by touch controls.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchUpdate: (event) => {
 			event = event || window.event;
 
 			this.Drag.DOMUpdate(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 		},
+
+		/**
+		 * Ends touch drag controls triggered by touch event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchClose: (event) => {
 			this.Release();
 			this.Drag.DOMClose();
@@ -553,6 +681,11 @@ var Window = function(windowName)
     		document.ontouchend = null;
 		},
 
+		/**
+		 * Initializes mouse drag controls triggered by mouse event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Open: (event) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -565,12 +698,24 @@ var Window = function(windowName)
 			document.onmousemove = this.Drag.Update;
 			document.onmouseup = this.Drag.Close;
 		},
+
+		/**
+		 * Update called by mouse controls.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Update: (event) => {
 			event = event || window.event;
 			event.preventDefault();
 
 			this.Drag.DOMUpdate(event.clientX, event.clientY);
 		},
+
+		/**
+		 * Ends mouse drag controls triggered by mouse event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Close: (event) => {
 			this.Release();
 			this.Drag.DOMClose();

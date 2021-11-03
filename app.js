@@ -1,5 +1,14 @@
-desktopApps = [];
+desktopApps = []; // Stores all active desktop apps
 
+/**
+ * Creates a desktop app.
+ *
+ * @param {function} action The action that should be performed when the app is opened.
+ * @param {{x, y} object} position Position of desktop app.
+ * @param {string} text Display text of desktop app.
+ * @param {string} tooltip Tooltip text of desktop app.
+ * @param {string} imgsrc Source of desktop app icon image.
+ */
 function CreateApp(action, position, text, tooltip, imgsrc)
 {
 	let desktopApp = new App();
@@ -10,28 +19,43 @@ function CreateApp(action, position, text, tooltip, imgsrc)
 	UpdateAppSelection();
 }
 
+/**
+ * Updates the desktop app positions when the page is resized.
+ */
 function UpdateAppSize()
 {
 	for (let i = 0; i < desktopApps.length; i++)
 		desktopApps[i].OnResize();
 }
 
+/**
+ * Updates the rendering of all desktop apps.
+ */
 function UpdateAppFocus()
 {
 	for (let i = 0; i < desktopApps.length; i++)
 		desktopApps[i].SetSelected(i, (i == desktopApps.length - 1));
 }
 
+/**
+ * Updates the selection of all desktop apps.
+ */
 function UpdateAppSelection()
 {
 	for (let i = 0; i < desktopApps.length; i++)
 		desktopApps[i].Deselect();
 }
 
+/** @class App representing a desktop app. */
 var App = function()
 {
+	/**
+	 * Creates an instance of App.
+	 */
+
 	this.focus;
 
+	// Object containing HTML DOM elements for the desktop app.
 	this.DOM = {
 		window: null,
 		container: null,
@@ -47,6 +71,9 @@ var App = function()
 
 	this.Action = () => {};
 
+	/**
+	 * Creates the HTML DOM elements for the desktop app.
+	 */
 	this.CreateDOM = function()
 	{
 		let fragment = document.createDocumentFragment();
@@ -92,6 +119,15 @@ var App = function()
 		document.getElementById("mainContainer").appendChild(fragment);
 	};
 
+	/**
+	 * Initializes the App object.
+	 *
+	 * @param {function} action The action that should be performed when the app is opened.
+ 	 * @param {{x, y} object} position Position of desktop app.
+ 	 * @param {string} text Display text of desktop app.
+ 	 * @param {string} tooltip Tooltip text of desktop app.
+ 	 * @param {string} imgsrc Source of desktop app icon image.
+	 */
 	this.Init = function(action, position, text, tooltip, imgsrc)
 	{
 		this.Action = action;
@@ -107,18 +143,27 @@ var App = function()
 		this.DOM.tooltip.innerHTML = tooltip;
 	};
 
+	/**
+	 * Creates the necessary event listeners for the App object.
+	 */
 	this.InitEventListeners = function()
 	{
+		// Event listeners for dragging apps.
 		if (!platformMobile)
 		{
+			// On desktop devices provide mouse controls.
 			this.DOM.window.addEventListener("mousedown", (event) => { this.Drag.Open(event); }, false);
 		}
 		else
 		{
+			// On mobile devices provide touch controls.
 			this.DOM.window.addEventListener("touchstart", (event) => { this.Drag.TouchStart(event); }, false);
 		}
 	};
 
+	/**
+	 * Selects the desktop app the be the focus.
+	 */
 	this.Select = function()
 	{
 		desktopApps.splice(this.focus, 1);
@@ -126,6 +171,9 @@ var App = function()
 		UpdateAppFocus();
 	}
 
+	/**
+	 * Sets the desktop app as the focus
+	 */
 	this.SetSelected = function(focus, isFocus)
 	{
 		this.focus = focus;
@@ -143,6 +191,9 @@ var App = function()
 		this.DOM.tooltip.style.zIndex = 1000;
 	}
 
+	/**
+	 * Deselects the desktop app.
+	 */
 	this.Deselect = function()
 	{
 		this.transform.selected = false;
@@ -150,15 +201,27 @@ var App = function()
 		if (platformMobile) this.DOM.tooltip.style.visibility = "hidden";
 	}
 
+	/**
+	 * Drag object for performing drag actions on the window.
+	 */
 	this.Drag = {
-		initial: { x:0, y:0 },
-		start: { x:0, y:0 },
+		initial: { x:0, y:0 }, // Initial position of drag.
+		start: { x:0, y:0 }, // Start position of drag.
 
+		/**
+		 * Triggers click operation if drag didn't occure.
+		 */
 		OpenEvent: () =>
 		{
 			this.Select();
 		},
 
+		/**
+		 * Performs drag on window DOM elements given the drag operation.
+		 *
+		 * @param {number} clientX X position of cursor / touch performing the drag.
+		 * @param {number} clientY Y position of cursor / touch performing the drag.
+		 */
 		DOMUpdate: (eventX, eventY) =>
 		{
 			if (!platformMobile)
@@ -203,6 +266,9 @@ var App = function()
 			}
 		},
 
+		/**
+		 * Perform special actions at the end of drag if certain conditions are met.
+		 */
 		CloseEvent: (eventX, eventY) =>
 		{
 			this.DOM.window.setAttribute("class", "win-desktopAppMount win-tooltip");
@@ -211,6 +277,8 @@ var App = function()
 			for (let i = 0; i < openedWindows.length; i++)
 				openedWindows[i].DOM.appCover.style.display = "none";
 
+			// If drag operation was not performed, treat as a click operation and trigger
+			// desktop app action.
 			if (eventX == this.Drag.initial.x && eventY == this.Drag.initial.y)
 			{
 				if (this.transform.selected)
@@ -230,6 +298,11 @@ var App = function()
 			}
 		},
 
+		/**
+		 * Initializes touch drag controls triggered by touch event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchStart: (event) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -244,11 +317,23 @@ var App = function()
 			document.ontouchmove = this.Drag.TouchUpdate;
 			document.ontouchend = this.Drag.TouchClose;
 		},
+
+		/**
+		 * Update called by touch controls.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchUpdate: (event) => {
 			event = event || window.event;
 
 			this.Drag.DOMUpdate(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 		},
+
+		/**
+		 * Ends touch drag controls triggered by touch event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		TouchClose: (event) => {
 			this.Drag.CloseEvent(event.changedTouches[0].clientX, event.changedTouches[0].clientY);
 
@@ -256,6 +341,11 @@ var App = function()
     		document.ontouchend = null;
 		},
 
+		/**
+		 * Initializes mouse drag controls triggered by mouse event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Open: (event) => {
 			event = event || window.event;
 			event.preventDefault();
@@ -270,12 +360,24 @@ var App = function()
 			document.onmousemove = this.Drag.Update;
 			document.onmouseup = this.Drag.Close;
 		},
+
+		/**
+		 * Update called by mouse controls.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Update: (event) => {
 			event = event || window.event;
 			event.preventDefault();
 
 			this.Drag.DOMUpdate(event.clientX, event.clientY);
 		},
+
+		/**
+		 * Ends mouse drag controls triggered by mouse event.
+		 *
+		 * @param {object} event EventListener event object.
+		 */
 		Close: (event) => {
 			this.Drag.CloseEvent(event.clientX, event.clientY);
 
@@ -284,6 +386,9 @@ var App = function()
 		}
 	};
 
+	/**
+	 * Make sure the desktop app is in a valid position when the webpage is resized.
+	 */
 	this.OnResize = function()
 	{
 		if (this.DOM.window.offsetTop + 70 > window.innerHeight)
