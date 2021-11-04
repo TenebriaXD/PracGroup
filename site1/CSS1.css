@@ -10,8 +10,10 @@ li{
 }
 
 body {
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'Trebuchet MS';
     font-size: medium;
+	background-color: powderblue;
+
 }
 .cat img {
     width: 200px;
