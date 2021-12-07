@@ -1,44 +1,866 @@
-<!DOCTYPE html>
 <html>
-
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width = device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">
-	<link rel="stylesheet" href="style.css">
-
-	<script src="source.js"></script>
-	<script src="window.js"></script>
-	<script src="app.js"></script>
-</head>
-
-<body onresize="UpdateSize();" onload="InitDesktop();">
-	<div class="win-appMount win-desktopBackground">
-		<!-- Removed titlebar for simplicity. -->
-		<!--
-		<div class="muffins-flex muffins-justifyStart muffins-alignStretch win-titleBar" style="height: 40px;">
-			<div class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="close-btn" aria-label="Close">
-				<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
-					<rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect>
-				</svg>
-			</div>
-			<div class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="max-btn" aria-label="Maximize">
-				<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
-					<rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect>
-				</svg>
-			</div>
-			<div class="muffins-flex muffins-alignCenter muffins-justifyCenter win-titleButton" style="height: 40px;" tabindex="-1" role="button" id="min-btn" aria-label="Minimize">
-				<svg aria-hidden="false" width="12" height="12" viewBox="0 0 12 12">
-					<rect width="9" height="9" x="1.5" y="1.5" fill="none" stroke="currentColor"></rect>
-				</svg>
-			</div>
-		</div>
-		-->
-
-		<div id="mainContainer" class="win-container">
-			<div class="win-container win-background" onclick="BlankClick();"></div>
+<style type="text/css">
+	table, td, th {
+		border: 1px solid black;
+	}
+	td {
+		text-align: right;
+    	width: 50px;
+	}
+	table {
+		table-layout: fixed;
+		border-collapse: collapse;
+	}
+</style>
+<div>
+	<h1>Unsigned Integers</h1>
+	<div>
+		<h2>Binary to Denary</h2>
+		<label>number of digits:</label>
+		<input id="UI_BD_IN1" type="number"></input>
+		<label>value:</label>
+		<input id="UI_BD_IN2" type="number"></input>
+		<button onclick="UnsignedIntegers_BD('UI_BD_IN1', 'UI_BD_IN2', 'UI_BD', 'UI_BD_DUMP')">Convert</button>
+		<label>Answer:</label>
+		<input id="UI_BD" type="number"></input>
+		<br></br>
+		<div id="UI_BD_DUMP">
 		</div>
 	</div>
-</body>
+	<div>
+		<h2>Denary to Binary</h2>
+		<label>number of digits:</label>
+		<input id="UI_DB_IN1" type="number"></input>
+		<label>value:</label>
+		<input id="UI_DB_IN2" type="number"></input>
+		<button onclick="UnsignedIntegers_DB('UI_DB_IN1', 'UI_DB_IN2', 'UI_DB', 'UI_DB_DUMP')">Convert</button>
+		<label>Answer:</label>
+		<input id="UI_DB" type="number"></input>
+		<br></br>
+		<div id="UI_DB_DUMP">
+		</div>
+	</div>
+	<h1>Twos Compliment</h1>
+	<div>
+		<h2>Binary to Denary</h2>
+		<label>number of digits:</label>
+		<input id="TC_BD_IN1" type="number"></input>
+		<label>value:</label>
+		<input id="TC_BD_IN2" type="number"></input>
+		<button onclick="TwosCompliment_BD('TC_BD_IN1', 'TC_BD_IN2', 'TC_BD', 'TC_BD_DUMP')">Convert</button>
+		<label>Answer:</label>
+		<input id="TC_BD" type="number"></input>
+		<br></br>
+		<div id="TC_BD_DUMP">
+		</div>
+	</div>
+	<div>
+		<h2>Denary to Binary</h2>
+		<label>number of digits:</label>
+		<input id="TC_DB_IN1" type="number"></input>
+		<label>value:</label>
+		<input id="TC_DB_IN2" type="number"></input>
+		<button onclick="TwosCompliment_DB('TC_DB_IN1', 'TC_DB_IN2', 'TC_DB', 'TC_DB_DUMP')">Convert</button>
+		<label>Answer:</label>
+		<input id="TC_DB" type="number"></input>
+		<br></br>
+		<div id="TC_DB_DUMP">
+		</div>
+	</div>
+	<h1>One's Compliment</h1>
+	<div>
+		<h2>Binary to Denary</h2>
+		If left-most bit is 1 then the number is negative, negate the binary and use unsigned integer conversion.
+		<br>
+		If left-most bit is 0 then the number is positive, use unsigned integer conversion.
+		<br>
+		A value of all 1s is 0, and a value of all 0s is also 0.
+	</div>
+	<div>
+		<h2>Denary to Binary</h2>
+		Convert normally using unsigned integer conversion.
+		<br>
+		If the value should be negative, negate the binary.
+		<br>
+		If the value should be positive, leave as is.
+	</div>
+	<h1>Floating Point</h1>
+	<div>
+		<h2>Binary to Denary</h2>
+		<label>exponent size in bits:</label>
+		<input id="FP_BD_IN1" type="number"></input>
+		<br>
+		<label>mantissa size in bits:</label>
+		<input id="FP_BD_IN2" type="number"></input>
+		<br>
+		<label>value:</label>
+		<input id="FP_BD_IN3" type="number"></input>
+		<br>
+		<button onclick="FloatingPoint_BD('FP_BD_IN1', 'FP_BD_IN2', 'FP_BD_IN3', 'FP_BD', 'FP_BD_DUMP')">Convert</button>
+		<label>Answer:</label>
+		<input id="FP_BD" type="number"></input>
+		<br></br>
+		<div id="FP_BD_DUMP">
+		</div>
+	</div>
+	<div>
+		<h2>Denary to Binary</h2>
+		<label>exponent size in bits:</label>
+		<input id="FP_DB_IN1" type="number"></input>
+		<br>
+		<label>mantissa size in bits:</label>
+		<input id="FP_DB_IN2" type="number"></input>
+		<br>
+		<label>value:</label>
+		<input id="FP_DB_IN3" type="number"></input>
+		<br>
+		<button onclick="FloatingPoint_DB('FP_DB_IN1', 'FP_DB_IN2', 'FP_DB_IN3', 'FP_DB', 'FP_DB_DUMP')">Convert</button>
+		<label>Answer:</label>
+		<input id="FP_DB" type="number"></input>
+		<br></br>
+		<div id="FP_DB_DUMP">
+		</div>
+	</div>
+	<h1>Karnaugh 4x4 to Truth table</h1>
+	<div>
+		This is to convert karnaugh map images to truth table such that they can be inputted into http://www.32x8.com/index.html .
+		The labels allow you to rename A B C D so that you know what they are when the other karnaugh map solver site provides an answer<br>
+		using A B C D and you can then substitute the correct letters in easily.<br>
+		<label>A:</label>
+		<input id="A" type="text"></input>
+		<br>
+		<label>B:</label>
+		<input id="B" type="text"></input>
+		<br>
+		<label>C:</label>
+		<input id="C" type="text"></input>
+		<br>
+		<label>D:</label>
+		<input id="D" type="text"></input>
+		<br>
+		<table>
+			<tr>
+				<td></td>
+				<td>CD</td>
+				<td>00</td>
+				<td>01</td>
+				<td>11</td>
+				<td>10</td>
+			</tr>
+			<tr>
+				<td>AB</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>00</td>
+				<td></td>
+				<td><input id="C0" type="text"></input></td>
+				<td><input id="C1" type="text"></input></td>
+				<td><input id="C3" type="text"></input></td>
+				<td><input id="C2" type="text"></input></td>
+			</tr>
+			<tr>
+				<td>01</td>
+				<td></td>
+				<td><input id="C4" type="text"></input></td>
+				<td><input id="C5" type="text"></input></td>
+				<td><input id="C7" type="text"></input></td>
+				<td><input id="C6" type="text"></input></td>
+			</tr>
+			<tr>
+				<td>11</td>
+				<td></td>
+				<td><input id="C12" type="text"></input></td>
+				<td><input id="C13" type="text"></input></td>
+				<td><input id="C15" type="text"></input></td>
+				<td><input id="C14" type="text"></input></td>
+			</tr>
+			<tr>
+				<td>10</td>
+				<td></td>
+				<td><input id="C8" type="text"></input></td>
+				<td><input id="C9" type="text"></input></td>
+				<td><input id="C11" type="text"></input></td>
+				<td><input id="C10" type="text"></input></td>
+			</tr>
+		</table>
+		<button onclick="TruthConvert()">Convert</button>
+		<div>
+			<table>
+				<tr>
+					<td>A</td>
+					<td>B</td>
+					<td>C</td>
+					<td>D</td>
+					<td>Y</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td id="A0">0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td id="A1">0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td id="A2">0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+					<td id="A3">0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td id="A4">0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<td id="A5">0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+					<td id="A6">0</td>
+				</tr>
+				<tr>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+					<td id="A7">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>0</td>
+					<td id="A8">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td>1</td>
+					<td id="A9">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<td>0</td>
+					<td id="A10">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<td>1</td>
+					<td id="A11">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+					<td>0</td>
+					<td id="A12">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+					<td>1</td>
+					<td id="A13">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+					<td>0</td>
+					<td id="A14">0</td>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+					<td>1</td>
+					<td id="A15">0</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function TruthConvert()
+	{
+		for (let i = 0; i < 16; i++)
+		{
+			document.getElementById("A" + i).innerHTML = document.getElementById("C" + i).value;
+		}
+	}
 
+	function FloatingPoint_DB(in1, in2, in3, output, dump)
+	{
+		let exponentSize = parseInt(document.getElementById(in1).value);
+		let mantissaSize = parseInt(document.getElementById(in2).value);
+		let denary = parseFloat(document.getElementById(in3).value);
+
+		let negative = denary < 0 ? 1 : 0;
+
+		let integer = parseInt(denary, 10);
+		let fraction = denary - integer;
+		if (integer < 0) integer *= -1;
+		if (fraction < 0) fraction *= -1;
+
+		let strdump = "sign bit = " + (negative == 1 ? "negative (1)" : "positive (0)") + "<br>integer part: " + integer + "<br>fraction part: " + fraction + "<br><br>Convert integer part to binary:<br><table><tr>";
+
+		let dumpHeadings = [];
+		let dumpBinary = [];
+		let dumpEquation = [];
+
+		//convert integer part to binary
+		let integerBinary = [];
+		let max = 0;
+		for (let i = 0; Math.pow(2, i + 1) <= integer; i++)
+			max = i + 1;
+		for (let i = max, value = integer; i >= 0; i--)
+		{
+			let heading = Math.pow(2, i);
+			dumpHeadings.push(heading);
+			if (value >= heading)
+			{
+				integerBinary.push(1);
+				dumpBinary.push(1);
+				value -= heading;
+				dumpEquation.push(heading);
+			}
+			else
+			{
+				integerBinary.push(0);
+				dumpBinary.push(0);
+			}
+		}
+
+		for (let i = 0; i < dumpHeadings.length; i++)
+		{
+			strdump += "<td>" + dumpHeadings[i] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = 0; i < dumpBinary.length; i++)
+		{
+			strdump += "<td>" + dumpBinary[i] + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		let seperator = "";
+		for (let i = 0; i < dumpEquation.length; i++)
+		{
+			strdump += seperator + dumpEquation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + integer + "<br><br>Convert fraction part to binary:<br><table><tr>";
+
+		//convert fraction to binary
+		let fractionBinary = [];
+		for (let i = 0, part = fraction; i < mantissaSize && part != 0; i++)
+		{
+			part *= 2;
+			if (part >= 1)
+			{
+				fractionBinary.push(1);
+				part -= 1;
+			}
+			else
+			{
+				fractionBinary.push(0);
+			}
+		}
+
+		dumpHeadings = [];
+		dumpBinary = [];
+		dumpEquation = [];
+
+		let fractionValue = 0;
+		for (let i = 1; i <= fractionBinary.length; i++)
+		{
+			let heading = Math.pow(2, -i);
+			dumpHeadings.push("1 / " + Math.pow(2, i) + " (" + heading + ")");
+			let character = i - 1;
+			dumpBinary.push(fractionBinary[character] == '1' ? 1 : 0);
+			if (character < fractionBinary.length)
+			{
+				fractionValue += fractionBinary[character] == '1' ? heading : 0;
+				if (fractionBinary[character] == '1')
+					dumpEquation.push(heading);
+			}
+		}
+
+		for (let i = 0; i < dumpHeadings.length; i++)
+		{
+			strdump += "<td>" + dumpHeadings[i] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = 0; i < dumpBinary.length; i++)
+		{
+			strdump += "<td>" + dumpBinary[i] + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		seperator = "";
+		for (let i = 0; i < dumpEquation.length; i++)
+		{
+			strdump += seperator + dumpEquation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + fractionValue + " (" + fraction + ")<br><br>Calculate exponent:<br>" + (integerBinary.length == 0 ? "0" : integerBinary.join('')) + " . " + fractionBinary.join('') + "<br>";
+
+		//calculate exponent
+		let exponent = 0;
+		if (integerBinary.length > 0)
+			exponent = integerBinary.length - 1;
+		else
+			for (let i = 0; i < fractionBinary.length; i++)
+			{
+				exponent--;
+				if (fractionBinary[i] == 1) break;
+			}
+
+		strdump += "shift decimal point by " + exponent + "<br><br>";
+
+		let bias = (Math.pow(2, exponentSize-1) - 1);
+
+		strdump += "Convert to bias form by adding bias:<br>";
+		strdump += "bias = 2^(k - 1) - 1 where k is the number of exponent bits<br>";
+		strdump += "bias = 2^(" + exponentSize + " - 1) - 1<br>"
+		strdump += "bias = " + bias + "<br>exponent = "
+
+		exponent += bias;
+
+		strdump += exponent + "<br>Converting exponent to binary:<br><table><tr>"
+
+		dumpHeadings = [];
+		dumpBinary = [];
+		dumpEquation = [];
+
+		//convert exponent to binary
+		let exponentBinary = [];
+		max = 0;
+		for (let i = 0; Math.pow(2, i + 1) <= exponent; i++)
+			max = i + 1;
+		for (let i = max, value = exponent; i >= 0; i--)
+		{
+			let heading = Math.pow(2, i);
+			dumpHeadings.push(heading);
+			if (value >= heading)
+			{
+				exponentBinary.push(1);
+				dumpBinary.push(1);
+				value -= heading;
+				dumpEquation.push(heading);
+			}
+			else
+			{
+				exponentBinary.push(0);
+				dumpBinary.push(0);
+			}
+		}
+
+		for (let i = 0; i < dumpHeadings.length; i++)
+		{
+			strdump += "<td>" + dumpHeadings[i] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = 0; i < dumpBinary.length; i++)
+		{
+			strdump += "<td>" + dumpBinary[i] + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		seperator = "";
+		for (let i = 0; i < dumpEquation.length; i++)
+		{
+			strdump += seperator + dumpEquation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + exponent + "<br><br>";
+
+		//join integer and fraction binary
+		let mantissaBinary = integerBinary.concat(fractionBinary);
+		//pad mantissaBinary
+		while (mantissaBinary.length - 1 < mantissaSize)
+		{
+			mantissaBinary.push(0);
+		}
+
+		//pad exponent
+		while (exponentBinary.length < exponentSize)
+		{
+			exponentBinary.unshift(0);
+		}
+
+		strdump += "Putting it all together:<br>";
+
+		//construct binary
+		let binary = [];
+		binary.push(negative);
+		strdump += negative + " ";
+		for (let i = 0; i < exponentSize; i++)
+		{
+			binary.push(exponentBinary[i]);
+			strdump += exponentBinary[i];
+		}
+		strdump += " "
+		for (let i = 0; i < mantissaSize; i++)
+		{
+			binary.push(mantissaBinary[i + 1]);
+			strdump += mantissaBinary[i + 1];
+		}
+
+		document.getElementById(dump).innerHTML = strdump;
+		document.getElementById(output).value = binary.join('');
+	}
+
+	function FloatingPoint_BD(in1, in2, in3, output, dump)
+	{
+		let exponentSize = parseInt(document.getElementById(in1).value);
+		let mantissaSize = parseInt(document.getElementById(in2).value);
+		let binary = document.getElementById(in3).value;
+
+		let sign = parseInt(binary[0]) == 1 ? -1 : 1;
+		let exponent = binary.substring(1, exponentSize + 1);
+		let mantissa = binary.substring(exponentSize + 1, exponentSize + mantissaSize + 1);
+
+
+		let strdump = binary[0] + " " + exponent + " " + mantissa + "<br><br>"; 
+		strdump += "sign = " + binary[0] + "<br>exponent = " + exponent + "<br>mantissa = " + mantissa + "<br><br>"; 
+		strdump += "sign bit = " + binary[0] + ", sign is " + (sign == -1 ? "negative" : "positive") + "<br><br>";
+
+		//calculate exponent bias
+		let bias = (Math.pow(2, exponentSize-1) - 1);
+		strdump += "bias = 2^(k - 1) - 1 where k is the number of bits in the exponent.<br>";
+		strdump += "bias = 2^(" + exponentSize + " - 1) - 1<br>";
+		strdump += "bias = " + bias + "<br><br>";
+
+		strdump += "Calculate exponent:<br><table><tr>";
+		let dumpHeadings = [];
+		let dumpBinary = [];
+		let dumpEquation = [];
+		//calculate exponent value
+		let exponentValue = 0;
+		for (let i = exponentSize - 1; i >= 0; i--)
+		{
+			let heading = Math.pow(2, i);
+			dumpHeadings.push(heading);
+			let character = exponentSize - i - 1;
+			if (character < exponent.length)
+			{
+				let v = exponent[character] == '1' ? heading : 0;
+				exponentValue += v;
+				if (exponent[character] == '1')
+					dumpEquation.push(v);
+				dumpBinary.push(exponent[character] == '1' ? 1 : 0);
+			}
+			else
+			{
+				dumpBinary.push(0);
+			}
+		}
+
+		for (let i = 0; i < dumpHeadings.length; i++)
+		{
+			strdump += "<td>" + dumpHeadings[i] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = 0; i < dumpBinary.length; i++)
+		{
+			strdump += "<td>" + dumpBinary[i] + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		let seperator = "";
+		for (let i = 0; i < dumpEquation.length; i++)
+		{
+			strdump += seperator + dumpEquation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + exponentValue + "<br>Subtract bias of " + bias + ":<br>";
+		strdump += exponentValue + " - " + bias	+ " = ";
+		exponentValue -= bias;
+		strdump += exponentValue + "<br><br>exponent = " + exponentValue + "<br><br>Calculate mantissa:<br><table><tr>";
+
+		dumpHeadings = [];
+		dumpBinary = [];
+		dumpEquation = [];
+		//calculate mantissa fraction part
+		let mantissaValue = 0;
+		for (let i = 1; i <= mantissaSize; i++)
+		{
+			let heading = Math.pow(2, -i);
+			dumpHeadings.push("1 / " + Math.pow(2, i) + " (" + heading + ")");
+			let character = i - 1;
+			dumpBinary.push(mantissa[character] == '1' ? 1 : 0);
+			if (character < mantissa.length)
+			{
+				mantissaValue += mantissa[character] == '1' ? heading : 0;
+				if (mantissa[character] == '1')
+					dumpEquation.push(heading);
+			}
+		}
+
+		for (let i = 0; i < dumpHeadings.length; i++)
+		{
+			strdump += "<td>" + dumpHeadings[i] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = 0; i < dumpBinary.length; i++)
+		{
+			strdump += "<td>" + dumpBinary[i] + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		seperator = "";
+		for (let i = 0; i < dumpEquation.length; i++)
+		{
+			strdump += seperator + dumpEquation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + mantissaValue + "<br>Add 1 to mantissa (assumed value):<br>";
+		strdump	+= mantissaValue + " + 1 = ";
+		mantissaValue += 1;
+
+		let denary = sign * mantissaValue * Math.pow(2, exponentValue);
+
+		strdump += mantissaValue + "<br><br>Calculate denary:<br>" + (sign == -1 ? "-" : "+") + mantissaValue + " x 2^(" + exponentValue + ") = " + denary;
+
+		document.getElementById(dump).innerHTML = strdump;
+		document.getElementById(output).value = denary;
+	}
+
+	function UnsignedIntegers_BD(in1, in2, output, dump)
+	{
+		let bits = document.getElementById(in1).value;
+		let input = document.getElementById(in2).value;
+		let denary = 0;
+		let headers = [];
+		let binary = [];
+		let equation = [];
+		for (let i = 0; i < bits; i++)
+		{
+			let index = Math.pow(2, i);
+			headers.push(index);
+			let character = input.length - i - 1;
+			if (character >= 0)
+			{
+				denary += input[character] == '1' ? index : 0;
+				equation.push(input[character] == '1' ? index : 0);
+				binary.push(input[character] == '1' ? 1 : 0);
+			}
+		}
+		let strdump = "<table><tr>"
+		for (let i = 0; i < headers.length; i++)
+		{
+			strdump += "<td>" + headers[headers.length - i - 1] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = bits - 1; i >= 0; i--)
+		{
+			if (i < binary.length)
+				strdump += "<td>" + binary[i] + "</td>";
+			else
+				strdump += "<td>" + 0 + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		let seperator = "";
+		for (let i = 0; i < equation.length; i++)
+		{
+			strdump += seperator + equation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + denary;
+		document.getElementById(dump).innerHTML = strdump;
+		document.getElementById(output).value = denary.toString();
+	}
+
+	function UnsignedIntegers_DB(in1, in2, output, dump)
+	{
+		let bits = document.getElementById(in1).value;
+		let input = parseInt(document.getElementById(in2).value);
+		let denary = 0;
+		let headers = [];
+		let binary = [];
+		let equation = [];
+		for (let i = bits - 1; i >= 0; i--)
+		{
+			let index = Math.pow(2, i);
+			headers.push(index);
+			if (index >= 0)
+			{
+				if (input >= index)
+				{
+					equation.push(index);
+					input -= index;
+					binary.push('1');
+				}
+				else
+				{
+					binary.push('0');
+				}
+			}
+			else if (input < 0)
+			{
+				input -= index;
+				equation.push(index);
+				binary.push('1');
+			}
+			else
+			{
+				binary.push('0');
+			}
+		}
+		let strdump = "<table><tr>"
+		for (let i = 0; i < headers.length; i++)
+		{
+			strdump += "<td>" + headers[i] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = 0; i < binary.length; i++)
+		{
+			strdump += "<td>" + binary[i] + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		let seperator = "";
+		for (let i = 0; i < equation.length; i++)
+		{
+			strdump += seperator + equation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + document.getElementById(in2).value;
+		document.getElementById(dump).innerHTML = strdump;
+		document.getElementById(output).value = binary.join('');
+	}
+
+	function TwosCompliment_BD(in1, in2, output, dump)
+	{
+		let bits = document.getElementById(in1).value;
+		let input = document.getElementById(in2).value;
+		let denary = 0;
+		let headers = [];
+		let binary = [];
+		let equation = [];
+		for (let i = 0; i < bits; i++)
+		{
+			let index = Math.pow(2, i);
+			if (i == bits - 1) index *= -1;
+			headers.push(index);
+			let character = input.length - i - 1;
+			if (character >= 0)
+			{
+				denary += input[character] == '1' ? index : 0;
+				equation.push(input[character] == '1' ? index : 0);
+				binary.push(input[character] == '1' ? 1 : 0);
+			}
+		}
+		let strdump = "<table><tr>"
+		for (let i = 0; i < headers.length; i++)
+		{
+			strdump += "<td>" + headers[headers.length - i - 1] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = bits - 1; i >= 0; i--)
+		{
+			if (i < binary.length)
+				strdump += "<td>" + binary[i] + "</td>";
+			else
+				strdump += "<td>" + 0 + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		let seperator = "";
+		for (let i = 0; i < equation.length; i++)
+		{
+			strdump += seperator + equation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + denary;
+		document.getElementById(dump).innerHTML = strdump;
+		document.getElementById(output).value = denary.toString();
+	}
+
+	function TwosCompliment_DB(in1, in2, output, dump)
+	{
+		let bits = document.getElementById(in1).value;
+		let input = parseInt(document.getElementById(in2).value);
+		let denary = 0;
+		let headers = [];
+		let binary = [];
+		let equation = [];
+		for (let i = bits - 1; i >= 0; i--)
+		{
+			let index = Math.pow(2, i);
+			if (i == bits - 1) index *= -1;
+			headers.push(index);
+			if (index >= 0)
+			{
+				if (input >= index)
+				{
+					equation.push(index);
+					input -= index;
+					binary.push('1');
+				}
+				else
+				{
+					binary.push('0');
+				}
+			}
+			else if (input < 0)
+			{
+				input -= index;
+				equation.push(index);
+				binary.push('1');
+			}
+			else
+			{
+				binary.push('0');
+			}
+		}
+		let strdump = "<table><tr>"
+		for (let i = 0; i < headers.length; i++)
+		{
+			strdump += "<td>" + headers[i] + "</td>";
+		}
+		strdump += "</tr><tr>";
+		for (let i = 0; i < binary.length; i++)
+		{
+			strdump += "<td>" + binary[i] + "</td>";
+		}
+		strdump += "</tr></table><br>";
+		let seperator = "";
+		for (let i = 0; i < equation.length; i++)
+		{
+			strdump += seperator + equation[i];
+			seperator = " + ";
+		}
+		strdump += " = " + document.getElementById(in2).value;
+		document.getElementById(dump).innerHTML = strdump;
+		document.getElementById(output).value = binary.join('');
+	}
+
+</script>
 </html>
