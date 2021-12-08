@@ -507,7 +507,7 @@
 		{
 			strdump += integerBinary[0] + " . " + integerBinary.slice(1, integerBinary.length).join('') + fractionBinary.join('');
 		}
-		strdump	 += "<br><br>Strip of 1 as it can be assumed:<br>" + fractionBinary.join('');
+		strdump	 += "<br><br>Strip of 1 as it can be assumed:<br>" + integerBinary.slice(1, integerBinary.length).join('') + fractionBinary.join('');
 		strdump	 += "<br><br>Convert shift (" + exponent + ") to exponent binary:<br>";
 
 		let bias = (Math.pow(2, exponentSize-1) - 1);
