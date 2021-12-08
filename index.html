@@ -330,7 +330,7 @@
 
 		let negative = denary < 0 ? 1 : 0;
 
-		let integer = parseInt(denary, 10);
+		let integer = Math.floor(Math.abs(denary));
 		let fraction = denary - integer;
 		if (integer < 0) integer *= -1;
 		if (fraction < 0) fraction *= -1;
@@ -380,11 +380,73 @@
 			strdump += seperator + dumpEquation[i];
 			seperator = " + ";
 		}
-		strdump += " = " + integer + "<br><br>Convert fraction part to binary:<br><table><tr>";
+		strdump += " = " + integer + "<br><br>Find shift required:<br>";//Convert fraction part to binary:<br><table><tr>";
+
+		let exponent = 0;
+
+		if (integerBinary[0] == 0)
+		{
+			strdump += "Integer part is 0, shift is in fraction part:<br><table><tr>"
+			//convert fraction to binary
+			let fractionBinary = [];
+			for (let i = 0, part = fraction; part != 0; i++)
+			{
+				exponent--;
+				part *= 2;
+				if (part >= 1)
+				{
+					fractionBinary.push(1);
+					break;
+				}
+				else
+				{
+					fractionBinary.push(0);
+				}
+			}
+
+			dumpHeadings = [];
+			dumpBinary = [];
+
+			let fractionValue = 0;
+			for (let i = 1; i <= fractionBinary.length; i++)
+			{
+				let heading = Math.pow(2, -i);
+				dumpHeadings.push("1 / " + Math.pow(2, i) + " (" + heading + ")");
+				let character = i - 1;
+				dumpBinary.push(fractionBinary[character] == '1' ? 1 : 0);
+				if (character < fractionBinary.length)
+				{
+					fractionValue += fractionBinary[character] == '1' ? heading : 0;
+				}
+			}
+
+			for (let i = 0; i < dumpHeadings.length; i++)
+			{
+				strdump += "<td>" + dumpHeadings[i] + "</td>";
+			}
+			strdump += "</tr><tr>";
+			for (let i = 0; i < dumpBinary.length; i++)
+			{
+				strdump += "<td>" + dumpBinary[i] + "</td>";
+			}
+			strdump += "</tr></table><br>";
+
+			strdump += "0 . " + fractionBinary.join('') + "...<br>Shift is " + exponent + ":<br>1 . " + fractionBinary.slice(-exponent, fractionBinary.length).join('') + "...<br><br>";
+		}
+		else
+		{
+			strdump += "Integer part is non-zero, shift is in integer part:<br>" + integerBinary.join('') + " . ...<br>";
+			exponent = integerBinary.length - 1;
+			strdump += "Shift is " + exponent + ":<br>" + integerBinary[0] + " . " + integerBinary.slice(1, integerBinary.length).join('') + "<br><br>";
+		}
+
+		let shift = exponent;
+
+		strdump += "Find relevant fraction part:<br><table><tr>";
 
 		//convert fraction to binary
 		let fractionBinary = [];
-		for (let i = 0, part = fraction; i < mantissaSize && part != 0; i++)
+		for (let i = 0, part = fraction; i < mantissaSize - exponent; i++)
 		{
 			part *= 2;
 			if (part >= 1)
@@ -433,20 +495,20 @@
 			strdump += seperator + dumpEquation[i];
 			seperator = " + ";
 		}
-		strdump += " = " + fractionValue + " (" + fraction + ")<br><br>Calculate exponent:<br>" + (integerBinary.length == 0 ? "0" : integerBinary.join('')) + " . " + fractionBinary.join('') + "<br>";
+		strdump += " = " + fractionValue + " (" + fraction + ")<br><br>" + integerBinary.join('') + " . " + fractionBinary.join('') + "<br><br>Apply shift (" + exponent + "):<br>";
 
-		//calculate exponent
-		let exponent = 0;
-		if (integerBinary.length > 0)
-			exponent = integerBinary.length - 1;
+		if (shift < 0)
+		{
+			let trimmed = fractionBinary.slice(-shift, fractionBinary.length);
+			fractionBinary = trimmed;
+			strdump += "1 . " + fractionBinary.join('');
+		}
 		else
-			for (let i = 0; i < fractionBinary.length; i++)
-			{
-				exponent--;
-				if (fractionBinary[i] == 1) break;
-			}
-
-		strdump += "shift decimal point by " + exponent + "<br><br>";
+		{
+			strdump += integerBinary[0] + " . " + integerBinary.slice(1, integerBinary.length).join('') + fractionBinary.join('');
+		}
+		strdump	 += "<br><br>Strip of 1 as it can be assumed:<br>" + fractionBinary.join('');
+		strdump	 += "<br><br>Convert shift (" + exponent + ") to exponent binary:<br>";
 
 		let bias = (Math.pow(2, exponentSize-1) - 1);
 
@@ -457,7 +519,15 @@
 
 		exponent += bias;
 
-		strdump += exponent + "<br>Converting exponent to binary:<br><table><tr>"
+		strdump += exponent + "<br>";
+
+		if (denary == 0)
+		{
+			strdump += "Special case, denary (0) so exponent = 0<br>";
+			exponent = 0;
+		}
+
+		strdump += "<br>Converting exponent to binary:<br><table><tr>"
 
 		dumpHeadings = [];
 		dumpBinary = [];
@@ -535,7 +605,6 @@
 			binary.push(mantissaBinary[i + 1]);
 			strdump += mantissaBinary[i + 1];
 		}
-		strdump += "<br>(Remember that the first digit of mantissa is assumed to be 1, hence first digit is cut off when joining the values together)";
 
 		document.getElementById(dump).innerHTML = strdump;
 		document.getElementById(output).value = binary.join('');
