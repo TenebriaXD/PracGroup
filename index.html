@@ -535,6 +535,7 @@
 			binary.push(mantissaBinary[i + 1]);
 			strdump += mantissaBinary[i + 1];
 		}
+		strdump += "<br>(Remember that the first digit of mantissa is assumed to be 1, hence first digit is cut off when joining the values together)";
 
 		document.getElementById(dump).innerHTML = strdump;
 		document.getElementById(output).value = binary.join('');
