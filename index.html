@@ -331,7 +331,7 @@
 		let negative = denary < 0 ? 1 : 0;
 
 		let integer = Math.floor(Math.abs(denary));
-		let fraction = denary - integer;
+		let fraction = Math.abs(denary) - integer;
 		if (integer < 0) integer *= -1;
 		if (fraction < 0) fraction *= -1;
 
